@@ -1,0 +1,21 @@
+#
+# Initialize cloud host with basic dev environment
+#
+- hosts: '{{ host }}'
+  become: true
+  tasks:
+    - name: Update repositories cache
+      apt: 
+        update_cache: yes
+
+    - name: Install default set of packages
+      apt: name={{item}} state=present
+      with_items:
+        - build_essential
+        - nginx-extras
+        - fail2ban
+        - python3-pip
+        - libssl-dev 
+        - libffi-dev 
+        - python-dev
+        - python3-venv

@@ -1,0 +1,24 @@
+#
+# apt update a host/list of ubuntu hosts if packages are available
+# - depends on unattended-updates
+#
+---
+- hosts: '{{ host }}'
+  become: true
+  tasks:
+    - name: Check if there are packages available to be installed/upgraded
+      command: /usr/lib/update-notifier/apt-check --package-names
+      register: packages
+
+    - name: Pass options to dpkg on run
+      apt:
+        upgrade: dist
+        update_cache: yes
+        dpkg_options: 'force-confold,force-confdef'
+      when: packages.stderr != ""
+    - name: autoclean repositories
+      apt:
+        autoclean: yes
+    - name: autoremove dependencies
+      apt:
+        autoremove: yes  
