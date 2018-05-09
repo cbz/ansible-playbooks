@@ -19,6 +19,8 @@
     - name: autoclean repositories
       apt:
         autoclean: yes
+      when: packages.stderr != ""
     - name: autoremove dependencies
       apt:
         autoremove: yes  
+      when: packages.stderr != ""
